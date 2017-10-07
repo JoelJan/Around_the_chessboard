@@ -51,6 +51,8 @@ class chessboard:
             for m in [(x+j[0],y+j[1]) for j in self.jump]:
                 if self.board[m]==self.actual:
                     self.move_knight(x,y,m)
+                    if (self.is_end(x,y)):
+                        self.game_end()
 
     def move_knight(self,x,y,last):
         ##move_knight and add actual state
@@ -75,10 +77,36 @@ class chessboard:
         self.DISPLAY.blit(text_score, textscore)
         pygame.display.flip()
 
+    def is_end(self,x,y):
+        print x
+        print y
+        for m in [(x+j[0],y+j[1]) for j in self.jump]:
+            #print (self.board[m]==0 and 0<=x<=self.width and 0<=y<=self.height)
+            print m
+            if (self.board[m]==0 and 1<=m[0]-1<=self.width and 1<=m[1]-1<=self.height):
+                print 'denied on'
+                print m
+                return(False)
+        return(True)
+    def game_end(self):
+        text = self.basicfont.render('The end. Your score was: '+str(self.actual-1), True, (255, 0, 0), (100, 100, 100))
+        end_text = text.get_rect()
+        end_text.centerx = self.width*square_size/2
+        end_text.centery = self.height*square_size/2
+        self.DISPLAY.blit(text, end_text)
+
 if __name__ == "__main__":
+    width=8
+    height=8
     pygame.init()
     screen = pygame.display.set_mode((square_size*8, square_size*8+40))
     chess=chessboard(8,8,screen)
+    basicfont = pygame.font.SysFont('Ariel', 28)
+    text = basicfont.render('New game', True, (255, 0, 0), (100, 100, 100))
+    button_text = text.get_rect()
+    button_text.centerx = 60
+    button_text.centery = height*square_size+20
+    screen.blit(text, button_text)
     print 'start'
     while True:
         for event in pygame.event.get():
@@ -91,9 +119,9 @@ if __name__ == "__main__":
                 pos=pygame.mouse.get_pos()
                 if pos[1]<square_size*8:
                     chess.on_click(pos)
-                    if chess.is_end():
-                        ## DO something
-                        pygame.quit()
-                        sys.exit()
+                if button_text.collidepoint(pos):
+                    print 'click'
+                    pygame.draw.rect(screen,black,(width*square_size-40,height*square_size,40,40))
+                    chess=chessboard(width,height,screen)
         pygame.display.update()
 
