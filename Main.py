@@ -25,7 +25,7 @@ class chessboard:
         self.board[x,y]=1
         print x-1
         print y-1       
-        self.knight=pygame.transform.scale(pygame.image.load('knight.gif'),(square_size,square_size))
+        self.knight=pygame.transform.scale(pygame.image.load('knight.png'),(square_size,square_size))
         self.move_knight(x,y,(0,0)) ##point (0,0) is not on screen and so wont be printed
 
     def draw(self):
